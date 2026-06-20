@@ -1,0 +1,29 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Backend",
+      "type": "shell",
+      "command": "node index.js",
+      "options": { "cwd": "${workspaceFolder}/server" },
+      "problemMatcher": [],
+      "presentation": { "panel": "new", "group": "backend" },
+      "isBackground": true
+    },
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/client" },
+      "problemMatcher": [],
+      "presentation": { "panel": "new", "group": "frontend" },
+      "isBackground": true
+    },
+    {
+      "label": "Start Blog (前后端一起启动)",
+      "dependsOn": ["Start Backend", "Start Frontend"],
+      "problemMatcher": [],
+      "dependsOrder": "parallel"
+    }
+  ]
+}
