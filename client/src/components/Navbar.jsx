@@ -3,6 +3,7 @@ import { useTheme } from "../useTheme";
 
 const links = [
   { to: "/", label: "Home" },
+  { to: "/life", label: "生活" },
   { to: "/about", label: "About" },
   { to: "/admin", label: "Write" },
 ];

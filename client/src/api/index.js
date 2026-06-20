@@ -109,6 +109,49 @@ export async function updateProfile(data) {
   return res.json();
 }
 
+// Life Notes
+export async function fetchLifeNotes({ page = 1 } = {}) {
+  const params = new URLSearchParams({ page });
+  const res = await fetch(`${BASE}/lifenotes?${params}`);
+  if (!res.ok) throw new Error("Failed to fetch life notes");
+  return res.json();
+}
+
+export async function fetchLifeNote(id) {
+  const res = await fetch(`${BASE}/lifenotes/${id}`);
+  if (!res.ok) throw new Error("Life note not found");
+  return res.json();
+}
+
+export async function createLifeNote(data) {
+  const res = await fetch(`${BASE}/lifenotes`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to create life note");
+  return res.json();
+}
+
+export async function updateLifeNote(id, data) {
+  const res = await fetch(`${BASE}/lifenotes/${id}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to update life note");
+  return res.json();
+}
+
+export async function deleteLifeNote(id) {
+  const res = await fetch(`${BASE}/lifenotes/${id}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to delete life note");
+  return res.json();
+}
+
 // Upload
 export async function uploadImage(file) {
   const formData = new FormData();

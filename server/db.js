@@ -45,6 +45,18 @@ db.exec(`
   )
 `);
 
+db.exec(`
+  CREATE TABLE IF NOT EXISTS life_notes (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    title      TEXT NOT NULL,
+    content    TEXT NOT NULL,
+    mood       TEXT DEFAULT '',
+    image_url  TEXT DEFAULT '',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`);
+
 // Seed default profile if empty
 const profileCount = db.prepare("SELECT COUNT(*) as c FROM profile").get().c;
 if (profileCount === 0) {

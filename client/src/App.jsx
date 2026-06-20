@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import Article from "./pages/Article";
 import About from "./pages/About";
 import Admin from "./pages/Admin";
+import Life from "./pages/Life";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/article/:id" element={<Article />} />
           <Route path="/about" element={<About />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/life" element={<Life />} />
         </Routes>
       </main>
       <Footer />

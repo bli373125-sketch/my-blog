@@ -6,6 +6,7 @@ import articlesRouter from "./routes/articles.js";
 import commentsRouter from "./routes/comments.js";
 import profileRouter from "./routes/profile.js";
 import uploadRouter from "./routes/upload.js";
+import lifenotesRouter from "./routes/lifenotes.js";
 import { loginHandler } from "./auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -20,6 +21,7 @@ app.use("/api/articles", articlesRouter);
 app.use("/api/comments", commentsRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/upload", uploadRouter);
+app.use("/api/lifenotes", lifenotesRouter);
 const dataDir = process.env.DATA_DIR || __dirname;
 app.use("/uploads", express.static(path.join(dataDir, "uploads")));
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
