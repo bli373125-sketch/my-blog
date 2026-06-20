@@ -6,7 +6,8 @@ import fs from "fs";
 import { requireAuth } from "../auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const uploadsDir = path.resolve(__dirname, "..", "uploads");
+const dataDir = process.env.DATA_DIR || path.resolve(__dirname, "..");
+const uploadsDir = path.join(dataDir, "uploads");
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 const storage = multer.diskStorage({

@@ -20,7 +20,8 @@ app.use("/api/articles", articlesRouter);
 app.use("/api/comments", commentsRouter);
 app.use("/api/profile", profileRouter);
 app.use("/api/upload", uploadRouter);
-app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));
+const dataDir = process.env.DATA_DIR || __dirname;
+app.use("/uploads", express.static(path.join(dataDir, "uploads")));
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
 // Serve frontend static files in production
