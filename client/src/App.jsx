@@ -8,7 +8,7 @@ import Admin from "./pages/Admin";
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors">
       <Navbar />
       <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
         <Routes>
