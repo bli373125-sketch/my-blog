@@ -1,5 +1,30 @@
 const BASE = "/api";
 
+function authHeaders() {
+  const token = localStorage.getItem("blog_token");
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+export function getToken() {
+  return localStorage.getItem("blog_token");
+}
+
+export async function login(password) {
+  const res = await fetch(`${BASE}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ password }),
+  });
+  if (!res.ok) throw new Error("Wrong password");
+  const data = await res.json();
+  localStorage.setItem("blog_token", data.token);
+  return data;
+}
+
+export function logout() {
+  localStorage.removeItem("blog_token");
+}
+
 export async function fetchArticles({ page = 1, tag = "", q = "" } = {}) {
   const params = new URLSearchParams({ page });
   if (tag) params.set("tag", tag);
@@ -24,7 +49,7 @@ export async function fetchArticle(id) {
 export async function createArticle(data) {
   const res = await fetch(`${BASE}/articles`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error("Failed to create article");
@@ -34,7 +59,7 @@ export async function createArticle(data) {
 export async function updateArticle(id, data) {
   const res = await fetch(`${BASE}/articles/${id}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) throw new Error("Failed to update article");
@@ -42,7 +67,10 @@ export async function updateArticle(id, data) {
 }
 
 export async function deleteArticle(id) {
-  const res = await fetch(`${BASE}/articles/${id}`, { method: "DELETE" });
+  const res = await fetch(`${BASE}/articles/${id}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  });
   if (!res.ok) throw new Error("Failed to delete article");
   return res.json();
 }

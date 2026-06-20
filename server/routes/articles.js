@@ -1,5 +1,6 @@
 import { Router } from "express";
 import db from "../db.js";
+import { requireAuth } from "../auth.js";
 
 const router = Router();
 
@@ -60,7 +61,7 @@ router.get("/:id", (req, res) => {
   res.json(article);
 });
 
-router.post("/", (req, res) => {
+router.post("/", requireAuth, (req, res) => {
   const { title, content, summary, tags } = req.body;
   if (!title || !content) {
     return res.status(400).json({ error: "Title and content are required" });
@@ -77,7 +78,7 @@ router.post("/", (req, res) => {
   res.status(201).json(article);
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", requireAuth, (req, res) => {
   const { title, content, summary, tags } = req.body;
   const existing = db
     .prepare("SELECT * FROM articles WHERE id = ?")
@@ -107,7 +108,7 @@ router.put("/:id", (req, res) => {
   res.json(updated);
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", requireAuth, (req, res) => {
   const existing = db
     .prepare("SELECT * FROM articles WHERE id = ?")
     .get(req.params.id);

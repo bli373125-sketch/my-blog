@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import {
+  getToken,
+  login,
+  logout,
   fetchArticles,
   createArticle,
   updateArticle,
@@ -9,6 +12,9 @@ import {
 const empty = { title: "", content: "", summary: "", tags: "" };
 
 export default function Admin() {
+  const [loggedIn, setLoggedIn] = useState(!!getToken());
+  const [password, setPassword] = useState("");
+  const [loginErr, setLoginErr] = useState("");
   const [articles, setArticles] = useState([]);
   const [form, setForm] = useState(empty);
   const [editId, setEditId] = useState(null);
@@ -17,12 +23,29 @@ export default function Admin() {
   const load = () => fetchArticles().then((d) => setArticles(d.articles));
 
   useEffect(() => {
-    load();
-  }, []);
+    if (loggedIn) load();
+  }, [loggedIn]);
 
   const showMsg = (text) => {
     setMsg(text);
     setTimeout(() => setMsg(""), 2000);
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoginErr("");
+    try {
+      await login(password);
+      setLoggedIn(true);
+    } catch {
+      setLoginErr("密码错误");
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setLoggedIn(false);
+    setArticles([]);
   };
 
   const parseTags = (raw) =>
@@ -42,16 +65,21 @@ export default function Admin() {
       tags: parseTags(form.tags),
     };
 
-    if (editId) {
-      await updateArticle(editId, payload);
-      showMsg("Updated!");
-    } else {
-      await createArticle(payload);
-      showMsg("Published!");
+    try {
+      if (editId) {
+        await updateArticle(editId, payload);
+        showMsg("Updated!");
+      } else {
+        await createArticle(payload);
+        showMsg("Published!");
+      }
+      setForm(empty);
+      setEditId(null);
+      load();
+    } catch {
+      showMsg("操作失败，请重新登录");
+      handleLogout();
     }
-    setForm(empty);
-    setEditId(null);
-    load();
   };
 
   const handleEdit = (a) => {
@@ -72,20 +100,60 @@ export default function Admin() {
 
   const handleDelete = async (id) => {
     if (!window.confirm("Delete?")) return;
-    await deleteArticle(id);
-    showMsg("Deleted.");
-    if (editId === id) {
-      setForm(empty);
-      setEditId(null);
+    try {
+      await deleteArticle(id);
+      showMsg("Deleted.");
+      if (editId === id) {
+        setForm(empty);
+        setEditId(null);
+      }
+      load();
+    } catch {
+      showMsg("操作失败，请重新登录");
+      handleLogout();
     }
-    load();
   };
+
+  if (!loggedIn) {
+    return (
+      <div className="max-w-sm mx-auto mt-20">
+        <h1 className="text-2xl font-bold mb-6 text-center">管理员登录</h1>
+        <form
+          onSubmit={handleLogin}
+          className="bg-white rounded-lg shadow-sm border p-6 space-y-4"
+        >
+          <input
+            className="w-full border rounded px-3 py-2"
+            type="password"
+            placeholder="请输入管理密码"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {loginErr && <p className="text-red-500 text-sm">{loginErr}</p>}
+          <button
+            type="submit"
+            className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+          >
+            登录
+          </button>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">
-        {editId ? "编辑文章" : "写文章"}
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">
+          {editId ? "编辑文章" : "写文章"}
+        </h1>
+        <button
+          onClick={handleLogout}
+          className="text-sm text-gray-400 hover:text-gray-600"
+        >
+          退出登录
+        </button>
+      </div>
 
       {msg && (
         <div className="mb-4 px-4 py-2 bg-green-100 text-green-800 rounded">
