@@ -74,3 +74,50 @@ export async function deleteArticle(id) {
   if (!res.ok) throw new Error("Failed to delete article");
   return res.json();
 }
+
+// Comments
+export async function fetchComments(articleId) {
+  const res = await fetch(`${BASE}/comments/article/${articleId}`);
+  if (!res.ok) throw new Error("Failed to fetch comments");
+  return res.json();
+}
+
+export async function postComment(articleId, { author, content }) {
+  const res = await fetch(`${BASE}/comments/article/${articleId}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ author, content }),
+  });
+  if (!res.ok) throw new Error("Failed to post comment");
+  return res.json();
+}
+
+// Profile
+export async function fetchProfile() {
+  const res = await fetch(`${BASE}/profile`);
+  if (!res.ok) throw new Error("Failed to fetch profile");
+  return res.json();
+}
+
+export async function updateProfile(data) {
+  const res = await fetch(`${BASE}/profile`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...authHeaders() },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to update profile");
+  return res.json();
+}
+
+// Upload
+export async function uploadImage(file) {
+  const formData = new FormData();
+  formData.append("image", file);
+  const res = await fetch(`${BASE}/upload`, {
+    method: "POST",
+    headers: authHeaders(),
+    body: formData,
+  });
+  if (!res.ok) throw new Error("Failed to upload image");
+  return res.json();
+}

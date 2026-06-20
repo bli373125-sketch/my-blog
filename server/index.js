@@ -3,6 +3,9 @@ import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
 import articlesRouter from "./routes/articles.js";
+import commentsRouter from "./routes/comments.js";
+import profileRouter from "./routes/profile.js";
+import uploadRouter from "./routes/upload.js";
 import { loginHandler } from "./auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -14,6 +17,10 @@ app.use(express.json());
 
 app.post("/api/auth/login", loginHandler);
 app.use("/api/articles", articlesRouter);
+app.use("/api/comments", commentsRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/upload", uploadRouter);
+app.use("/uploads", express.static(path.resolve(__dirname, "uploads")));
 app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
 
 // Serve frontend static files in production
