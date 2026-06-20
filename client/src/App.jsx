@@ -8,9 +8,9 @@ import Admin from "./pages/Admin";
 
 export default function App() {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors">
+    <div className="min-h-screen flex flex-col bg-[var(--color-bg)] transition-colors duration-300">
       <Navbar />
-      <main className="flex-1 max-w-4xl mx-auto w-full px-4 py-8">
+      <main className="flex-1 max-w-3xl mx-auto w-full px-5 py-10">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/article/:id" element={<Article />} />

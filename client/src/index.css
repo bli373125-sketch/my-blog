@@ -1,3 +1,56 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg:        #FDFAF5;
+    --color-surface:   #FFFFFF;
+    --color-border:    #E8E1D5;
+    --color-text:      #2C241A;
+    --color-text-muted:#7A7065;
+    --color-accent:    #C56A42;
+  }
+  .dark {
+    --color-bg:        #1E1B17;
+    --color-surface:   #282420;
+    --color-border:    #3D3630;
+    --color-text:      #E8E1D5;
+    --color-text-muted:#A0998F;
+    --color-accent:    #D4875E;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-[var(--color-bg)] text-[var(--color-text)] transition-colors duration-300;
+  }
+}
+
+@layer components {
+  .prose-warm {
+    @apply prose prose-lg dark:prose-invert max-w-none
+      prose-headings:text-ink-800 dark:prose-headings:text-ink-200
+      prose-headings:font-serif
+      prose-h1:text-3xl prose-h1:font-bold prose-h1:mt-10 prose-h1:mb-6
+      prose-h2:text-2xl prose-h2:font-semibold prose-h2:mt-8 prose-h2:mb-4
+      prose-h3:text-xl prose-h3:font-semibold prose-h3:mt-6 prose-h3:mb-3
+      prose-p:leading-relaxed prose-p:my-5
+      prose-a:text-rust-600 dark:prose-a:text-rust-400
+      prose-a:no-underline hover:prose-a:underline
+      prose-strong:text-ink-800 dark:prose-strong:text-ink-100
+      prose-blockquote:border-rust-400 prose-blockquote:bg-ink-50 dark:prose-blockquote:bg-ink-800
+      prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-4
+      prose-blockquote:text-ink-600 dark:prose-blockquote:text-ink-300
+      prose-li:marker:text-rust-400
+      prose-code:text-ink-700 dark:prose-code:text-ink-300
+      prose-code:bg-ink-100 dark:prose-code:bg-ink-800
+      prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
+      prose-code:font-normal prose-code:text-sm
+      [&_pre]:!bg-[#282c34] [&_pre]:!rounded-xl [&_pre]:!p-5
+      [&_pre_code]:!bg-transparent [&_pre_code]:!px-0
+      [&_img]:rounded-xl;
+  }
+}

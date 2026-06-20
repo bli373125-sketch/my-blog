@@ -31,7 +31,10 @@ export default function Admin() {
       setTotalPages(d.totalPages);
     });
   };
-  const showMsg = (text) => { setMsg(text); setTimeout(() => setMsg(""), 2000); };
+  const showMsg = (text) => {
+    setMsg(text);
+    setTimeout(() => setMsg(""), 2000);
+  };
 
   useEffect(() => {
     if (!loggedIn) return;
@@ -40,146 +43,387 @@ export default function Admin() {
   }, [loggedIn, listPage]);
 
   const handleLogin = async (e) => {
-    e.preventDefault(); setLoginErr("");
-    try { await login(password); setLoggedIn(true); }
-    catch { setLoginErr("Wrong password"); }
+    e.preventDefault();
+    setLoginErr("");
+    try {
+      await login(password);
+      setLoggedIn(true);
+    } catch {
+      setLoginErr("密码错误");
+    }
   };
-  const handleLogout = () => { logout(); setLoggedIn(false); setArticles([]); };
+  const handleLogout = () => {
+    logout();
+    setLoggedIn(false);
+    setArticles([]);
+  };
 
-  const parseTags = (raw) => raw.split(/[,，\s]+/).map((t) => t.trim()).filter(Boolean);
+  const parseTags = (raw) =>
+    raw.split(/[,，\s]+/).map((t) => t.trim()).filter(Boolean);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.title.trim() || !form.content.trim()) return;
-    const payload = { title: form.title, content: form.content, summary: form.summary, tags: parseTags(form.tags) };
+    const payload = {
+      title: form.title,
+      content: form.content,
+      summary: form.summary,
+      tags: parseTags(form.tags),
+    };
     try {
-      editId ? await updateArticle(editId, payload) : await createArticle(payload);
-      showMsg(editId ? "Updated!" : "Published!");
-      setForm(empty); setEditId(null); load();
-    } catch { showMsg("Failed"); handleLogout(); }
+      editId
+        ? await updateArticle(editId, payload)
+        : await createArticle(payload);
+      showMsg(editId ? "已更新!" : "已发布!");
+      setForm(empty);
+      setEditId(null);
+      load();
+    } catch {
+      showMsg("操作失败");
+      handleLogout();
+    }
   };
 
   const handleEdit = (a) => {
     let tagStr = "";
-    try { tagStr = JSON.parse(a.tags || "[]").join(", "); } catch { tagStr = a.tags || ""; }
-    setForm({ title: a.title, content: a.content, summary: a.summary || "", tags: tagStr });
+    try {
+      tagStr = JSON.parse(a.tags || "[]").join(", ");
+    } catch {
+      tagStr = a.tags || "";
+    }
+    setForm({
+      title: a.title,
+      content: a.content,
+      summary: a.summary || "",
+      tags: tagStr,
+    });
     setEditId(a.id);
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete?")) return;
-    try { await deleteArticle(id); showMsg("Deleted."); if (editId === id) { setForm(empty); setEditId(null); } load(); }
-    catch { showMsg("Failed"); handleLogout(); }
+    if (!window.confirm("确认删除?")) return;
+    try {
+      await deleteArticle(id);
+      showMsg("已删除。");
+      if (editId === id) {
+        setForm(empty);
+        setEditId(null);
+      }
+      load();
+    } catch {
+      showMsg("操作失败");
+      handleLogout();
+    }
   };
 
   const handleUpload = async (e) => {
-    const file = e.target.files?.[0]; if (!file) return;
+    const file = e.target.files?.[0];
+    if (!file) return;
     setUploading(true);
-    try { const data = await uploadImage(file); setForm({ ...form, content: form.content + `\n![${file.name}](${data.url})\n` }); showMsg("Uploaded!"); }
-    catch { showMsg("Upload failed"); }
+    try {
+      const data = await uploadImage(file);
+      setForm({
+        ...form,
+        content: form.content + `\n![${file.name}](${data.url})\n`,
+      });
+      showMsg("上传成功!");
+    } catch {
+      showMsg("上传失败");
+    }
     setUploading(false);
   };
 
   const handleProfileSave = async (e) => {
     e.preventDefault();
-    try { await updateProfile(profile); setProfileMsg("Saved!"); setTimeout(() => setProfileMsg(""), 2000); }
-    catch { setProfileMsg("Failed"); }
+    try {
+      await updateProfile(profile);
+      setProfileMsg("已保存!");
+      setTimeout(() => setProfileMsg(""), 2000);
+    } catch {
+      setProfileMsg("保存失败");
+    }
   };
 
+  // 登录表单
   if (!loggedIn) {
     return (
-      <div className="max-w-sm mx-auto mt-20">
-        <Helmet><title>Admin Login — My Blog</title></Helmet>
-        <h1 className="text-2xl font-bold mb-6 text-center dark:text-white">Admin Login</h1>
-        <form onSubmit={handleLogin} className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 space-y-4">
-          <input className="w-full border dark:border-gray-700 rounded px-3 py-2 bg-white dark:bg-gray-700 dark:text-white" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          {loginErr && <p className="text-red-500 text-sm">{loginErr}</p>}
-          <button type="submit" className="w-full py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Login</button>
+      <div className="max-w-sm mx-auto mt-16">
+        <Helmet><title>管理登录 — 静思录</title></Helmet>
+        <h1 className="text-2xl font-serif font-bold mb-8 text-center text-ink-800 dark:text-ink-100">
+          管理登录
+        </h1>
+        <form
+          onSubmit={handleLogin}
+          className="bg-white dark:bg-ink-800 rounded-2xl border border-ink-100 dark:border-ink-700 p-6 space-y-4"
+        >
+          <input
+            className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+            type="password"
+            placeholder="密码"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {loginErr && (
+            <p className="text-red-500 text-sm font-sans">{loginErr}</p>
+          )}
+          <button
+            type="submit"
+            className="w-full py-3 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+          >
+            登录
+          </button>
         </form>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
-      <Helmet><title>Admin — My Blog</title></Helmet>
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex gap-4">
-          <button onClick={() => setTab("articles")} className={`text-lg font-semibold pb-1 border-b-2 ${tab === "articles" ? "border-indigo-600 text-indigo-600 dark:text-indigo-400" : "border-transparent text-gray-500 dark:text-gray-400"}`}>Articles</button>
-          <button onClick={() => setTab("profile")} className={`text-lg font-semibold pb-1 border-b-2 ${tab === "profile" ? "border-indigo-600 text-indigo-600 dark:text-indigo-400" : "border-transparent text-gray-500 dark:text-gray-400"}`}>Profile</button>
+    <div>
+      <Helmet><title>管理 — 静思录</title></Helmet>
+
+      {/* 顶部 */}
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex gap-6 font-sans">
+          <button
+            onClick={() => setTab("articles")}
+            className={`text-lg font-medium pb-1.5 border-b-2 transition-colors ${
+              tab === "articles"
+                ? "border-rust-500 text-rust-600 dark:text-rust-400"
+                : "border-transparent text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300"
+            }`}
+          >
+            文章
+          </button>
+          <button
+            onClick={() => setTab("profile")}
+            className={`text-lg font-medium pb-1.5 border-b-2 transition-colors ${
+              tab === "profile"
+                ? "border-rust-500 text-rust-600 dark:text-rust-400"
+                : "border-transparent text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300"
+            }`}
+          >
+            个人信息
+          </button>
         </div>
-        <button onClick={handleLogout} className="text-sm text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">Logout</button>
+        <button
+          onClick={handleLogout}
+          className="text-sm text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300 font-sans transition-colors"
+        >
+          退出登录
+        </button>
       </div>
 
-      {msg && <div className="mb-4 px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded text-sm">{msg}</div>}
+      {msg && (
+        <div className="mb-6 px-4 py-3 bg-rust-50 dark:bg-rust-900/30 text-rust-700 dark:text-rust-300 rounded-xl text-sm font-sans">
+          {msg}
+        </div>
+      )}
 
+      {/* 文章管理 */}
       {tab === "articles" && (
         <div className="flex gap-6">
-          <form onSubmit={handleSubmit} className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 space-y-4">
-            <h2 className="font-semibold dark:text-white">{editId ? "Edit" : "New Article"}</h2>
-            <input className="w-full border dark:border-gray-700 rounded px-3 py-2 text-lg bg-white dark:bg-gray-700 dark:text-white" placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-            <input className="w-full border dark:border-gray-700 rounded px-3 py-2 bg-white dark:bg-gray-700 dark:text-white" placeholder="Summary" value={form.summary} onChange={(e) => setForm({ ...form, summary: e.target.value })} />
-            <input className="w-full border dark:border-gray-700 rounded px-3 py-2 bg-white dark:bg-gray-700 dark:text-white" placeholder="Tags: React, Node" value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} />
+          {/* 编辑器 */}
+          <form
+            onSubmit={handleSubmit}
+            className="flex-1 bg-white dark:bg-ink-800 rounded-2xl border border-ink-100 dark:border-ink-700 p-6 space-y-4"
+          >
+            <h2 className="font-serif font-semibold text-ink-800 dark:text-ink-100">
+              {editId ? "编辑文章" : "新建文章"}
+            </h2>
+            <input
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-lg bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-serif focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              placeholder="标题"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            />
+            <input
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              placeholder="摘要"
+              value={form.summary}
+              onChange={(e) => setForm({ ...form, summary: e.target.value })}
+            />
+            <input
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              placeholder="标签: React, Node"
+              value={form.tags}
+              onChange={(e) => setForm({ ...form, tags: e.target.value })}
+            />
             <div className="flex items-center gap-2">
-              <button type="button" onClick={() => fileRef.current?.click()} disabled={uploading} className="text-sm px-3 py-1.5 border dark:border-gray-600 rounded text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700">{uploading ? "Uploading..." : "Upload Image"}</button>
-              <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleUpload} />
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                className="text-sm px-3 py-2 border border-ink-200 dark:border-ink-700 rounded-xl text-ink-500 dark:text-ink-400 font-sans hover:bg-ink-50 dark:hover:bg-ink-700 transition-colors disabled:opacity-50"
+              >
+                {uploading ? "上传中..." : "上传图片"}
+              </button>
+              <input
+                ref={fileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleUpload}
+              />
             </div>
-            <textarea className="w-full border dark:border-gray-700 rounded px-3 py-2 font-mono text-sm bg-white dark:bg-gray-700 dark:text-white" rows={18} placeholder="Markdown..." value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} />
+            <textarea
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 font-mono text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              rows={18}
+              placeholder="Markdown 内容..."
+              value={form.content}
+              onChange={(e) => setForm({ ...form, content: e.target.value })}
+            />
             <div className="flex gap-3">
-              <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">{editId ? "Save" : "Publish"}</button>
-              {editId && <button type="button" onClick={() => { setForm(empty); setEditId(null); }} className="px-6 py-2 border dark:border-gray-600 rounded text-gray-600 dark:text-gray-400">Cancel</button>}
+              <button
+                type="submit"
+                className="px-6 py-2.5 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+              >
+                {editId ? "保存" : "发布"}
+              </button>
+              {editId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setForm(empty);
+                    setEditId(null);
+                  }}
+                  className="px-6 py-2.5 border border-ink-200 dark:border-ink-700 rounded-xl text-ink-500 dark:text-ink-400 font-sans hover:bg-ink-50 dark:hover:bg-ink-700 transition-colors"
+                >
+                  取消
+                </button>
+              )}
             </div>
           </form>
 
-          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 max-h-[calc(100vh-10rem)] overflow-y-auto">
-            <h2 className="font-semibold mb-4 text-gray-400">Preview</h2>
-            {form.title && <h1 className="text-2xl font-bold mb-2 dark:text-white">{form.title}</h1>}
-            {form.summary && <p className="text-gray-500 text-sm mb-4">{form.summary}</p>}
+          {/* 预览 */}
+          <div className="flex-1 bg-white dark:bg-ink-800 rounded-2xl border border-ink-100 dark:border-ink-700 p-6 max-h-[calc(100vh-10rem)] overflow-y-auto">
+            <h2 className="font-sans font-medium mb-4 text-ink-300 dark:text-ink-600 text-sm uppercase tracking-wider">
+              预览
+            </h2>
+            {form.title && (
+              <h1 className="text-2xl font-serif font-bold mb-2 text-ink-800 dark:text-ink-100">
+                {form.title}
+              </h1>
+            )}
+            {form.summary && (
+              <p className="text-ink-400 dark:text-ink-500 text-sm font-sans mb-4">
+                {form.summary}
+              </p>
+            )}
             {form.content ? (
-              <div className="prose prose-sm dark:prose-invert max-w-none"><ReactMarkdown>{form.content}</ReactMarkdown></div>
+              <div className="prose prose-sm dark:prose-invert max-w-none font-serif">
+                <ReactMarkdown>{form.content}</ReactMarkdown>
+              </div>
             ) : (
-              <p className="text-gray-300 text-sm">Start typing to preview...</p>
+              <p className="text-ink-200 dark:text-ink-700 text-sm font-serif">
+                开始输入以预览...
+              </p>
             )}
           </div>
         </div>
       )}
 
+      {/* 个人信息 */}
       {tab === "profile" && (
-        <form onSubmit={handleProfileSave} className="max-w-xl bg-white dark:bg-gray-800 rounded-lg shadow-sm border dark:border-gray-700 p-6 space-y-4">
-          <h2 className="font-semibold mb-2 dark:text-white">Edit Profile</h2>
-          {profileMsg && <div className="px-4 py-2 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded text-sm">{profileMsg}</div>}
-          {["name","bio","avatar","email","github","skills"].map((k) => (
+        <form
+          onSubmit={handleProfileSave}
+          className="max-w-xl bg-white dark:bg-ink-800 rounded-2xl border border-ink-100 dark:border-ink-700 p-8 space-y-4"
+        >
+          <h2 className="font-serif font-semibold mb-2 text-ink-800 dark:text-ink-100">
+            编辑个人信息
+          </h2>
+          {profileMsg && (
+            <div className="px-4 py-3 bg-rust-50 dark:bg-rust-900/30 text-rust-700 dark:text-rust-300 rounded-xl text-sm font-sans">
+              {profileMsg}
+            </div>
+          )}
+          {["name", "bio", "avatar", "email", "github", "skills"].map((k) => (
             <div key={k}>
-              <label className="text-xs text-gray-400 uppercase">{k}</label>
+              <label className="text-xs text-ink-300 dark:text-ink-600 uppercase tracking-wider font-sans">
+                {k}
+              </label>
               {k === "bio" ? (
-                <textarea className="w-full border dark:border-gray-700 rounded px-3 py-2 text-sm bg-white dark:bg-gray-700 dark:text-white" rows={3} value={profile[k] || ""} onChange={(e) => setProfile({ ...profile, [k]: e.target.value })} />
+                <textarea
+                  className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors resize-y"
+                  rows={3}
+                  value={profile[k] || ""}
+                  onChange={(e) =>
+                    setProfile({ ...profile, [k]: e.target.value })
+                  }
+                />
               ) : (
-                <input className="w-full border dark:border-gray-700 rounded px-3 py-2 bg-white dark:bg-gray-700 dark:text-white" value={profile[k] || ""} onChange={(e) => setProfile({ ...profile, [k]: e.target.value })} />
+                <input
+                  className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+                  value={profile[k] || ""}
+                  onChange={(e) =>
+                    setProfile({ ...profile, [k]: e.target.value })
+                  }
+                />
               )}
             </div>
           ))}
-          <button type="submit" className="px-6 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">Save Profile</button>
+          <button
+            type="submit"
+            className="px-6 py-2.5 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+          >
+            保存信息
+          </button>
         </form>
       )}
 
+      {/* 文章列表 */}
       {tab === "articles" && (
-        <div className="mt-10">
-          <h2 className="text-xl font-bold mb-4 dark:text-white">All Articles</h2>
-          <div className="flex items-center gap-4 mb-4">
-            <button onClick={() => setListPage((p) => Math.max(1, p - 1))} disabled={listPage === 1} className="text-sm px-3 py-1 border dark:border-gray-600 rounded disabled:opacity-30 dark:text-gray-400">Prev</button>
-            <span className="text-sm text-gray-500 dark:text-gray-400">{listPage} / {totalPages}</span>
-            <button onClick={() => setListPage((p) => Math.min(totalPages, p + 1))} disabled={listPage === totalPages} className="text-sm px-3 py-1 border dark:border-gray-600 rounded disabled:opacity-30 dark:text-gray-400">Next</button>
+        <div className="mt-12">
+          <h2 className="text-xl font-serif font-bold mb-5 text-ink-800 dark:text-ink-100">
+            所有文章
+          </h2>
+          <div className="flex items-center gap-4 mb-5 font-sans">
+            <button
+              onClick={() => setListPage((p) => Math.max(1, p - 1))}
+              disabled={listPage === 1}
+              className="text-sm px-3 py-1.5 border border-ink-200 dark:border-ink-700 rounded-xl disabled:opacity-30 text-ink-500 dark:text-ink-400 hover:bg-ink-50 dark:hover:bg-ink-700 transition-colors"
+            >
+              上一页
+            </button>
+            <span className="text-sm text-ink-400 dark:text-ink-500">
+              {listPage} / {totalPages}
+            </span>
+            <button
+              onClick={() =>
+                setListPage((p) => Math.min(totalPages, p + 1))
+              }
+              disabled={listPage === totalPages}
+              className="text-sm px-3 py-1.5 border border-ink-200 dark:border-ink-700 rounded-xl disabled:opacity-30 text-ink-500 dark:text-ink-400 hover:bg-ink-50 dark:hover:bg-ink-700 transition-colors"
+            >
+              下一页
+            </button>
           </div>
           {articles.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400">No articles</p>
+            <p className="text-ink-400 dark:text-ink-500 font-serif">
+              暂无文章
+            </p>
           ) : (
             <ul className="space-y-2">
               {articles.map((a) => (
-                <li key={a.id} className="flex items-center justify-between bg-white dark:bg-gray-800 border dark:border-gray-700 rounded px-4 py-3">
-                  <span className="dark:text-gray-200">{a.title}</span>
-                  <div className="flex gap-2">
-                    <button onClick={() => handleEdit(a)} className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline">Edit</button>
-                    <button onClick={() => handleDelete(a.id)} className="text-sm text-red-500 hover:underline">Delete</button>
+                <li
+                  key={a.id}
+                  className="flex items-center justify-between bg-white dark:bg-ink-800 border border-ink-100 dark:border-ink-700 rounded-xl px-5 py-3.5"
+                >
+                  <span className="text-ink-700 dark:text-ink-200 font-sans">
+                    {a.title}
+                  </span>
+                  <div className="flex gap-3 font-sans">
+                    <button
+                      onClick={() => handleEdit(a)}
+                      className="text-sm text-rust-600 dark:text-rust-400 hover:underline"
+                    >
+                      编辑
+                    </button>
+                    <button
+                      onClick={() => handleDelete(a.id)}
+                      className="text-sm text-red-500 hover:underline"
+                    >
+                      删除
+                    </button>
                   </div>
                 </li>
               ))}
