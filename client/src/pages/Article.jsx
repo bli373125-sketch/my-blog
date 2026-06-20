@@ -14,7 +14,11 @@ function createHeading(level) {
   const Tag = `h${level}`;
   return function Heading({ children }) {
     const text = String(children);
-    return <Tag id={slugify(text)} className="font-serif">{children}</Tag>;
+    return (
+      <Tag id={slugify(text)} className="font-serif">
+        {children}
+      </Tag>
+    );
   };
 }
 
@@ -59,7 +63,7 @@ export default function Article() {
         </p>
         <Link
           to="/"
-          className="text-rust-600 dark:text-rust-400 hover:underline mt-4 inline-block font-sans text-sm"
+          className="text-vert-700 dark:text-vert-400 hover:underline mt-4 inline-block font-sans text-sm"
         >
           &larr; 返回首页
         </Link>
@@ -78,6 +82,10 @@ export default function Article() {
     month: "long",
     day: "numeric",
   });
+  const monoDate = new Date(article.created_at)
+    .toISOString()
+    .slice(0, 10)
+    .replace(/-/g, ".");
   let tags = [];
   try {
     tags = JSON.parse(article.tags || "[]");
@@ -95,12 +103,17 @@ export default function Article() {
       <article className="flex-1 min-w-0">
         <Link
           to="/"
-          className="text-ink-400 dark:text-ink-500 hover:text-rust-600 dark:hover:text-rust-400 text-sm mb-6 inline-block font-sans transition-colors"
+          className="text-ink-400 dark:text-ink-500 hover:text-vert-700 dark:hover:text-vert-400 text-xs mb-8 inline-block font-sans transition-colors uppercase tracking-widest"
         >
-          &larr; 返回
+          &larr; Back
         </Link>
 
-        <h1 className="text-3xl font-serif font-bold mt-2 mb-3 text-ink-800 dark:text-ink-100 leading-tight">
+        {/* Industrial essay number */}
+        <p className="font-mono text-[10px] text-ink-300 dark:text-ink-600 tracking-widest mb-3 tabular-nums">
+          ESSAY NO.{String(article.id).padStart(3, "0")} &mdash; {monoDate}
+        </p>
+
+        <h1 className="text-3xl font-serif font-bold mt-2 mb-4 text-[var(--color-text)] leading-tight">
           {article.title}
         </h1>
 
@@ -113,7 +126,7 @@ export default function Article() {
               {tags.map((t) => (
                 <span
                   key={t}
-                  className="text-xs px-2.5 py-0.5 rounded-full bg-rust-50 dark:bg-rust-900/40 text-rust-600 dark:text-rust-400"
+                  className="text-xs px-2.5 py-0.5 rounded bg-vert-50 dark:bg-vert-900/30 text-vert-700 dark:text-vert-400 font-medium"
                 >
                   {t}
                 </span>
@@ -122,7 +135,7 @@ export default function Article() {
           )}
         </div>
 
-        <div className="prose-warm font-serif">
+        <div className="prose-atelier font-serif">
           <ReactMarkdown
             components={{
               h1: createHeading(1),
@@ -151,8 +164,8 @@ export default function Article() {
         </div>
 
         {/* Comments */}
-        <div className="mt-14 border-t border-ink-100 dark:border-ink-800 pt-10">
-          <h2 className="text-xl font-serif font-bold mb-8 text-ink-800 dark:text-ink-100">
+        <div className="mt-14 border-t border-[var(--color-border)] pt-10">
+          <h2 className="text-xl font-serif font-bold mb-8 text-[var(--color-text)]">
             评论 ({comments.length})
           </h2>
 
@@ -162,31 +175,31 @@ export default function Article() {
               className="border-b border-ink-50 dark:border-ink-800 pb-5 mb-5 last:border-0"
             >
               <div className="flex items-center gap-2 mb-1.5 font-sans">
-                <span className="font-medium text-sm text-ink-700 dark:text-ink-200">
+                <span className="font-medium text-sm text-[var(--color-text)]">
                   {c.author || "匿名"}
                 </span>
-                <span className="text-xs text-ink-300 dark:text-ink-600">
+                <span className="text-xs text-ink-400 dark:text-ink-600">
                   {new Date(c.created_at).toLocaleDateString("zh-CN")}
                 </span>
               </div>
-              <p className="text-ink-600 dark:text-ink-300 text-sm leading-relaxed whitespace-pre-wrap font-sans">
+              <p className="text-ink-600 dark:text-ink-300 text-sm leading-relaxed whitespace-pre-wrap font-sans font-light">
                 {c.content}
               </p>
             </div>
           ))}
 
           <form onSubmit={handleComment} className="mt-8 space-y-3">
-            <h3 className="font-sans font-medium text-sm text-ink-500 dark:text-ink-400">
+            <h3 className="font-sans font-medium text-sm text-ink-400 dark:text-ink-500 uppercase tracking-widest">
               发表评论
             </h3>
             <input
-              className="w-full max-w-xs border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-ink-800 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full max-w-xs border border-[var(--color-border)] px-4 py-2.5 text-sm bg-[var(--color-surface)] text-[var(--color-text)] placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans font-light focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               placeholder="昵称（可选）"
               value={cAuthor}
               onChange={(e) => setCAuthor(e.target.value)}
             />
             <textarea
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 text-sm bg-white dark:bg-ink-800 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors resize-y"
+              className="w-full border border-[var(--color-border)] px-4 py-3 text-sm bg-[var(--color-surface)] text-[var(--color-text)] placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans font-light focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors resize-y"
               rows={3}
               placeholder="写下你的想法..."
               value={cContent}
@@ -194,15 +207,21 @@ export default function Article() {
               required
             />
             {cMsg && (
-              <p className={`text-sm font-sans ${cMsg.includes("失败") ? "text-red-500" : "text-rust-600 dark:text-rust-400"}`}>
+              <p
+                className={`text-sm font-sans ${
+                  cMsg.includes("失败")
+                    ? "text-red-500"
+                    : "text-vert-700 dark:text-vert-400"
+                }`}
+              >
                 {cMsg}
               </p>
             )}
             <button
               type="submit"
-              className="px-6 py-2.5 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 text-sm font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+              className="px-6 py-2.5 bg-vert-700 dark:bg-vert-600 text-white text-sm font-sans font-medium hover:bg-vert-800 dark:hover:bg-vert-500 transition-colors uppercase tracking-widest"
             >
-              发布评论
+              Submit
             </button>
           </form>
         </div>

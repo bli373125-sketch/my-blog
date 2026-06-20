@@ -233,7 +233,7 @@ export default function Admin() {
           className="bg-white dark:bg-ink-800 rounded-2xl border border-ink-100 dark:border-ink-700 p-6 space-y-4"
         >
           <input
-            className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+            className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
             type="password"
             placeholder="密码"
             value={password}
@@ -244,7 +244,7 @@ export default function Admin() {
           )}
           <button
             type="submit"
-            className="w-full py-3 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+            className="w-full py-3 bg-vert-700 dark:bg-vert-600 text-white font-sans font-medium hover:bg-vert-800 dark:hover:bg-vert-500 transition-colors uppercase tracking-widest text-sm"
           >
             登录
           </button>
@@ -264,7 +264,7 @@ export default function Admin() {
             onClick={() => setTab("articles")}
             className={`text-lg font-medium pb-1.5 border-b-2 transition-colors ${
               tab === "articles"
-                ? "border-rust-500 text-rust-600 dark:text-rust-400"
+                ? "border-vert-500 text-vert-600 dark:text-vert-400"
                 : "border-transparent text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300"
             }`}
           >
@@ -274,7 +274,7 @@ export default function Admin() {
             onClick={() => setTab("lifenotes")}
             className={`text-lg font-medium pb-1.5 border-b-2 transition-colors ${
               tab === "lifenotes"
-                ? "border-rust-500 text-rust-600 dark:text-rust-400"
+                ? "border-vert-500 text-vert-600 dark:text-vert-400"
                 : "border-transparent text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300"
             }`}
           >
@@ -284,7 +284,7 @@ export default function Admin() {
             onClick={() => setTab("profile")}
             className={`text-lg font-medium pb-1.5 border-b-2 transition-colors ${
               tab === "profile"
-                ? "border-rust-500 text-rust-600 dark:text-rust-400"
+                ? "border-vert-500 text-vert-600 dark:text-vert-400"
                 : "border-transparent text-ink-400 dark:text-ink-500 hover:text-ink-600 dark:hover:text-ink-300"
             }`}
           >
@@ -300,7 +300,7 @@ export default function Admin() {
       </div>
 
       {msg && (
-        <div className="mb-6 px-4 py-3 bg-rust-50 dark:bg-rust-900/30 text-rust-700 dark:text-rust-300 rounded-xl text-sm font-sans">
+        <div className="mb-6 px-4 py-3 bg-vert-50 dark:bg-vert-900/30 text-vert-700 dark:text-vert-300 rounded-xl text-sm font-sans">
           {msg}
         </div>
       )}
@@ -317,19 +317,19 @@ export default function Admin() {
               {editId ? "编辑文章" : "新建文章"}
             </h2>
             <input
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-lg bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-serif focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-lg bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-serif focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               placeholder="标题"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
             />
             <input
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               placeholder="摘要"
               value={form.summary}
               onChange={(e) => setForm({ ...form, summary: e.target.value })}
             />
             <input
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               placeholder="标签: React, Node"
               value={form.tags}
               onChange={(e) => setForm({ ...form, tags: e.target.value })}
@@ -352,7 +352,7 @@ export default function Admin() {
               />
             </div>
             <textarea
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 font-mono text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 font-mono text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               rows={18}
               placeholder="Markdown 内容..."
               value={form.content}
@@ -361,7 +361,7 @@ export default function Admin() {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+                className="px-6 py-2.5 bg-vert-700 dark:bg-vert-600 text-white font-sans font-medium hover:bg-vert-800 dark:hover:bg-vert-500 transition-colors uppercase tracking-widest text-sm"
               >
                 {editId ? "保存" : "发布"}
               </button>
@@ -420,13 +420,13 @@ export default function Admin() {
               {editLNId ? "编辑趣事" : "新建趣事"}
             </h2>
             <input
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-lg bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-serif focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-lg bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-serif focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               placeholder="标题"
               value={LNForm.title}
               onChange={(e) => setLNForm({ ...LNForm, title: e.target.value })}
             />
             <input
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 font-sans focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               placeholder="心情 (如 😄😢🤔)"
               value={LNForm.mood}
               onChange={(e) => setLNForm({ ...LNForm, mood: e.target.value })}
@@ -454,7 +454,7 @@ export default function Admin() {
               />
             </div>
             <textarea
-              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 font-mono text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+              className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-3 font-mono text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 placeholder:text-ink-300 dark:placeholder:text-ink-600 focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
               rows={14}
               placeholder="Markdown 内容..."
               value={LNForm.content}
@@ -463,7 +463,7 @@ export default function Admin() {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="px-6 py-2.5 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+                className="px-6 py-2.5 bg-vert-700 dark:bg-vert-600 text-white font-sans font-medium hover:bg-vert-800 dark:hover:bg-vert-500 transition-colors uppercase tracking-widest text-sm"
               >
                 {editLNId ? "保存" : "发布"}
               </button>
@@ -521,7 +521,7 @@ export default function Admin() {
             所有趣事
           </h2>
           {LNMsg && (
-            <div className="mb-4 px-4 py-3 bg-rust-50 dark:bg-rust-900/30 text-rust-700 dark:text-rust-300 rounded-xl text-sm font-sans">
+            <div className="mb-4 px-4 py-3 bg-vert-50 dark:bg-vert-900/30 text-vert-700 dark:text-vert-300 rounded-xl text-sm font-sans">
               {LNMsg}
             </div>
           )}
@@ -564,7 +564,7 @@ export default function Admin() {
                   <div className="flex gap-3 font-sans">
                     <button
                       onClick={() => handleLNEdit(n)}
-                      className="text-sm text-rust-600 dark:text-rust-400 hover:underline"
+                      className="text-sm text-vert-600 dark:text-vert-400 hover:underline"
                     >
                       编辑
                     </button>
@@ -592,7 +592,7 @@ export default function Admin() {
             编辑个人信息
           </h2>
           {profileMsg && (
-            <div className="px-4 py-3 bg-rust-50 dark:bg-rust-900/30 text-rust-700 dark:text-rust-300 rounded-xl text-sm font-sans">
+            <div className="px-4 py-3 bg-vert-50 dark:bg-vert-900/30 text-vert-700 dark:text-vert-300 rounded-xl text-sm font-sans">
               {profileMsg}
             </div>
           )}
@@ -603,7 +603,7 @@ export default function Admin() {
               </label>
               {k === "bio" ? (
                 <textarea
-                  className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors resize-y"
+                  className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 font-sans focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors resize-y"
                   rows={3}
                   value={profile[k] || ""}
                   onChange={(e) =>
@@ -612,7 +612,7 @@ export default function Admin() {
                 />
               ) : (
                 <input
-                  className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 font-sans focus:outline-none focus:border-rust-400 dark:focus:border-rust-600 transition-colors"
+                  className="w-full border border-ink-200 dark:border-ink-700 rounded-xl px-4 py-2.5 bg-white dark:bg-ink-700 text-ink-800 dark:text-ink-200 font-sans focus:outline-none focus:border-vert-500 dark:focus:border-vert-600 transition-colors"
                   value={profile[k] || ""}
                   onChange={(e) =>
                     setProfile({ ...profile, [k]: e.target.value })
@@ -623,7 +623,7 @@ export default function Admin() {
           ))}
           <button
             type="submit"
-            className="px-6 py-2.5 bg-ink-800 dark:bg-ink-200 text-white dark:text-ink-900 font-sans font-medium rounded-xl hover:bg-ink-700 dark:hover:bg-ink-100 transition-colors"
+            className="px-6 py-2.5 bg-vert-700 dark:bg-vert-600 text-white font-sans font-medium hover:bg-vert-800 dark:hover:bg-vert-500 transition-colors uppercase tracking-widest text-sm"
           >
             保存信息
           </button>
@@ -674,7 +674,7 @@ export default function Admin() {
                   <div className="flex gap-3 font-sans">
                     <button
                       onClick={() => handleEdit(a)}
-                      className="text-sm text-rust-600 dark:text-rust-400 hover:underline"
+                      className="text-sm text-vert-600 dark:text-vert-400 hover:underline"
                     >
                       编辑
                     </button>
